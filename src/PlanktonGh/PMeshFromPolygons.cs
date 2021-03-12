@@ -19,7 +19,7 @@ namespace PlanktonGh
         /// new tabs/panels will automatically be created.
         /// </summary>
         public PMeshFromPolygons()
-          : base("PMeshFromPolygons", "pMfromPolygons",
+          : base("Plankton From Polygons", "PlanktonFromPolygons",
             "PMeshFromPolygons description",
             "Mesh", "Plankton")
         {
@@ -30,6 +30,7 @@ namespace PlanktonGh
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
+            pManager.AddCurveParameter("Polygons", "plgns", "Faces for PMesh as closed polygons / polylines", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -37,6 +38,7 @@ namespace PlanktonGh
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
+            pManager.AddParameter(new GH_PlanktonMeshParam(), "PMesh", "PMesh", "Generated Plankton mesh", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -46,6 +48,21 @@ namespace PlanktonGh
         /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            List<Curve> faces = new List<Curve>();
+            DA.GetDataList(0, faces);
+
+            List<Polyline> polys = new List<Polyline>();
+            for (int i = 0; i < faces.Count; i++)
+            {
+                var tempCrv = faces[i];
+
+                if (tempCrv is PolylineCurve && tempCrv.IsClosed)
+                    polys.Add(((PolylineCurve)tempCrv).ToPolyline());
+                else
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "One or more curves are not polylines. These have been ignored. Please Check.");
+            }
+
+            DA.SetData(0, PMeshFromPolylines(polys));
         }
 
         /// <summary>
@@ -70,6 +87,40 @@ namespace PlanktonGh
         public override Guid ComponentGuid
         {
             get { return new Guid("602a3a75-d39a-4936-8d6e-165631215cbd"); }
+        }
+
+        PlanktonMesh PMeshFromPolylines(List<Polyline> faces)
+        {
+            var pMesh = new PlanktonMesh();
+            //add n-gon faces
+            var verts = new List<Point3d>();
+            for (int i = 0; i < faces.Count; i++)
+            {
+                var currFace = new List<int>();
+
+                for (int j = 0; j < faces[i].Count - 1; j++)
+                {
+                    var currPt = faces[i].PointAt(j);
+                    var id = verts.IndexOf(currPt);
+                    if (id < 0)
+                    {
+                        //push a vertex to list
+                        //push that index to current face
+                        pMesh.Vertices.Add(currPt.X, currPt.Y, currPt.Z);
+                        verts.Add(currPt);
+                        currFace.Add(pMesh.Vertices.Count - 1);
+                    }
+                    else
+                    {
+                        //push this index to current face
+                        currFace.Add(id);
+                    }
+                }
+
+                pMesh.Faces.AddFace(currFace);
+            }
+
+            return pMesh;
         }
     }
 }

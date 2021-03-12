@@ -18,8 +18,8 @@ namespace PlanktonGh
         /// new tabs/panels will automatically be created.
         /// </summary>
         public PMeshGetDual()
-          : base("PMeshGetDual", "Nickname",
-            "PMeshGetDual description",
+          : base("Plankton Get Dual", "PlanktonGetDual",
+            "Get the dual mesh of a Plankton mesh",
             "Mesh", "Plankton")
         {
         }

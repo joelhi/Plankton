@@ -18,8 +18,8 @@ namespace PlanktonGh
         /// new tabs/panels will automatically be created.
         /// </summary>
         public PMeshGetPolygons()
-          : base("PMeshGetPolygons", "Nickname",
-            "PMeshGetPolygons description",
+          : base("Plankton Get Polygons", "PlanktonGetPolygons",
+            "Get the faces of a plankton mesh as Polygons",
             "Mesh", "Plankton")
         {
         }
