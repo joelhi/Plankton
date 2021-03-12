@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Rhino.Geometry;
+
+using Grasshopper;
 using Grasshopper.Kernel;
+using Rhino.Geometry;
+
 using Plankton;
 
 namespace PlanktonGh
 {
-
-    public class PMeshFromPoints : GH_Component
+    public class PMeshFromPolygons : GH_Component
     {
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -18,10 +18,10 @@ namespace PlanktonGh
         /// Subcategory the panel. If you use non-existing tab or panel names, 
         /// new tabs/panels will automatically be created.
         /// </summary>
-        public PMeshFromPoints()
-            : base("PlanktonFromPoints", "PlanktonFromPoints",
-                "Create a new Plankton mesh from an existing Plankton mesh and a list of points",
-                "Mesh", "Plankton")
+        public PMeshFromPolygons()
+          : base("PMeshFromPolygons", "pMfromPolygons",
+            "PMeshFromPolygons description",
+            "Mesh", "Plankton")
         {
         }
 
@@ -30,8 +30,6 @@ namespace PlanktonGh
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new GH_PlanktonMeshParam(), "PMesh", "PMesh", "The input PlanktonMesh to use the topology from", GH_ParamAccess.item);
-            pManager.AddPointParameter("Vertices", "Vertices", "The new list of vertex positions", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -39,7 +37,6 @@ namespace PlanktonGh
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.Register_GenericParam("PlanktonMesh", "P", "Plankton Mesh");
         }
 
         /// <summary>
@@ -47,14 +44,8 @@ namespace PlanktonGh
         /// </summary>
         /// <param name="DA">The DA object can be used to retrieve data from input parameters and 
         /// to store data in output parameters.</param>
-
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            PlanktonMesh P = new PlanktonMesh();
-            List<Point3d> Points = new List<Point3d>();
-            if ((!DA.GetData<PlanktonMesh>(0, ref P)) || (!DA.GetDataList(1, Points))) return;
-            PlanktonMesh pMesh = P.ReplaceVertices(Points);           
-            DA.SetData(0, pMesh);
         }
 
         /// <summary>
@@ -65,7 +56,9 @@ namespace PlanktonGh
         {
             get
             {
-                return PlanktonGh.Properties.Resources.plankton_verts;
+                // You can add image files to your project resources and access them like this:
+                //return Resources.IconForThisComponent;
+                return null;
             }
         }
 
@@ -76,7 +69,7 @@ namespace PlanktonGh
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("{c9377989-c89e-477d-8dd2-b35af0c3b25d}"); }
+            get { return new Guid("602a3a75-d39a-4936-8d6e-165631215cbd"); }
         }
     }
 }

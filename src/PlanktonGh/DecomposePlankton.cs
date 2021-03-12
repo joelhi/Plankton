@@ -15,7 +15,7 @@ namespace PlanktonGh
         public DecomposePlankton()
             : base("DeconstructPlankton", "DeconstructPlankton",
                 "Decompose a plankton mesh into its topology information",
-                "Mesh", "Triangulation")
+                "Mesh", "Plankton")
         {
         }
 

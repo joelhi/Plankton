@@ -73,6 +73,9 @@
     </Compile>
     <Compile Include="RhinoSupport.cs" />
     <Compile Include="Properties\GrasshopperAssemblyInfo.cs" />
+    <Compile Include="PMeshGetPolygons.cs" />
+    <Compile Include="PMeshGetDual.cs" />
+    <Compile Include="PMeshFromPolygons.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Plankton\Plankton.csproj">
