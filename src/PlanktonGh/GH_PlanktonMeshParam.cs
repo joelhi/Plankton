@@ -5,13 +5,15 @@ using Grasshopper.Kernel;
 using Rhino.Geometry;
 using Rhino.Input.Custom;
 using PlanktonGh.Properties;
+using Grasshopper.Kernel.Types;
+using Plankton;
 
 namespace PlanktonGh
 {
     public class GH_PlanktonMeshParam : GH_PersistentGeometryParam<GH_PlanktonMesh>, IGH_PreviewObject, IGH_BakeAwareObject
     {
         public GH_PlanktonMeshParam()
-            : base(new GH_InstanceDescription("PlanktonMesh", "PMesh", "Represents a list of 3D ngonal halfedge meshes", "Params", "Geometry"))
+            : base(new GH_InstanceDescription("PlanktonMesh xx", "PMesh", "Represents a list of 3D ngonal halfedge meshes", "Params", "Geometry"))
         { }
 
         protected override GH_PlanktonMesh InstantiateT()
@@ -172,6 +174,27 @@ namespace PlanktonGh
             {
                 return Resources.plankton_param;
             }
+        }
+
+        // JOEL ADDITION
+
+        protected override GH_PlanktonMesh PreferredCast(object data)
+        {
+            if (data is GH_ObjectWrapper)
+            {
+                var wrapper = data as GH_ObjectWrapper;
+
+                if (wrapper.Value is PlanktonMesh)
+                    return new GH_PlanktonMesh(wrapper.Value as PlanktonMesh);
+                else
+                    return null;
+            }
+            else if (data is PlanktonMesh)
+            {
+                return new GH_PlanktonMesh((PlanktonMesh)data);
+            }
+            else
+                return null;
         }
     }
 }
