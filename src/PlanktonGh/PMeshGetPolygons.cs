@@ -52,6 +52,8 @@ namespace PlanktonGh
             DA.SetDataList(0, mesh.ToPolylines());
         }
 
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
+
         /// <summary>
         /// Provides an Icon for every component that will be visible in the User Interface.
         /// Icons need to be 24x24 pixels.
